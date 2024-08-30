@@ -450,7 +450,10 @@ class ClientCall<Q, R> implements Response {
     _stream!.terminate();
   }
 
-  Stream<R> get response => _responses.stream;
+  // allows to subscribe to the response stream at interceptor level
+  Stream<R>? _broadcast;
+  Stream<R> get response =>
+      _broadcast ??= _responses.stream.asBroadcastStream();
 
   @override
   Future<Map<String, String>> get headers => _headers.future;
